@@ -9,7 +9,7 @@ def display_menu():
     print(" 5. 🚪 Exit")
     print("═"*40)
 
-def list_tasks(db):
+def list_tasks(db: Session) -> bool:
     tasks = db.query(Task).order_by(Task.id).all()
     if not tasks:
         print("\n[!] No tasks found in the database.")
@@ -23,7 +23,7 @@ def list_tasks(db):
         print(f"{task.id:<4} | {status:<6} | {task.title}{desc_str}")
     return True
 
-def add_task(db):
+def add_task(db: Session) -> None:
     title = input("\nEnter task title: ").strip()
     if not title:
         print("Error: Task title cannot be empty.")
@@ -35,7 +35,7 @@ def add_task(db):
     db.commit()
     print(f"\n Task '{title}' added successfully!")
 
-def update_task(db):
+def update_task(db: Session) -> None:
     if not list_tasks(db):
         return
     try:
@@ -64,7 +64,7 @@ def update_task(db):
     db.commit()
     print("✨ Task updated successfully!")
 
-def remove_task(db):
+def remove_task(db: Session) -> None:
     if not list_tasks(db):
         return
     try:
