@@ -4,13 +4,11 @@ from typing import Optional, List
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, Session, Mapped, mapped_column
 
-# 1. Database Configuration
 DATABASE_URL = "postgresql://postgres:password@localhost:5432/task_db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# 2. Database Model
 class Task(Base):
     __tablename__ = "tasks"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
@@ -20,10 +18,8 @@ class Task(Base):
 
 Base.metadata.create_all(bind=engine)
 
-# 3. FastAPI Initialization
 app = FastAPI(title="Task Manager API")
 
-# 4. Dependency to get DB session per request
 def get_db():
     db = SessionLocal()
     try:
@@ -31,7 +27,6 @@ def get_db():
     finally:
         db.close()
 
-# 5. Pydantic Schemas (For data validation)
 class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
@@ -50,7 +45,6 @@ class TaskResponse(BaseModel):
     class Config:
         from_attributes = True
 
-# 6. FastAPI Route Endpoints
 @app.get("/tasks", response_model=List[TaskResponse])
 def list_tasks(db: Session = Depends(get_db)):
     return db.query(Task).order_by(Task.id).all()
