@@ -1,4 +1,3 @@
-import sys
 from database import SessionLocal, Task
 
 def display_menu():
